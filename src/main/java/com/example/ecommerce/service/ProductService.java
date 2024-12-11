@@ -55,4 +55,8 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
+    public Page<Product> searchProduct(String keyword, Double minPrice, Double maxPrice, Pageable pageable) {
+        return productRepository.findBySearchAndFilters(keyword, minPrice, maxPrice, pageable);
+    }
+
 }

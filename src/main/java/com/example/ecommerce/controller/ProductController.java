@@ -1,8 +1,10 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.PaginatedResponse;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.PageRequest;
@@ -21,24 +23,34 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // retrive all products
-    @GetMapping
-    public Page<Product> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+    @GetMapping("/search")
+    public PaginatedResponse<Product> searchProducts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir
 
     ) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return productService.getAllProducts(pageable);
+
+        Page<Product> productPage = productService.searchProduct(keyword, minPrice, maxPrice, pageable);
+
+        return new PaginatedResponse<>(
+                productPage.getContent(),
+                productPage.getNumber(),
+                productPage.getTotalPages(),
+                productPage.getTotalElements()
+        );
     }
 
-    @GetMapping("/search")
-    public List<Product> searchProducts(@RequestParam String keyword) {
-        return productService.searchProducts(keyword);
-    }
+//    @GetMapping("/search")
+//    public List<Product> searchProducts(@RequestParam String keyword) {
+//        return productService.searchProducts(keyword);
+//    }
 
     @GetMapping("/filter")
     public List<Product> filterProducts(
@@ -56,12 +68,10 @@ public class ProductController {
         return ResponseEntity.ok(savedProduct);
     }
 
-    //What is path variable?
+    //@PathVariable annotation to extract the id from the URL
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct) {
         Product savedProduct = productService.updateProduct(id, updatedProduct);
         return ResponseEntity.ok(savedProduct);
     }
-
-
 }
