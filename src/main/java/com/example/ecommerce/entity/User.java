@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -23,7 +25,10 @@ public class User {
     private String email;
 
     @NotBlank(message = "Password is required")
-    @JsonIgnore
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$",
+            message = "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one digit, and one special character"
+    )
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
