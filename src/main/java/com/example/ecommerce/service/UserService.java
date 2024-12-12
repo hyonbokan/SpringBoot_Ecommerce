@@ -23,7 +23,7 @@ public class UserService {
     }
 
     // Register a new user
-    public User registerUser(User user) {
+    public User registerUser(User user, boolean isAdmin) {
         // Check if email already exists
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use");
@@ -33,13 +33,21 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         // assign default role
-        user.getRoles().add("ROLE_USER");
+        if (isAdmin) {
+            user.getRoles().add("ROLE_ADMIN");
+        } else {
+            user.getRoles().add("ROLE_USER");
+        }
 
         return userRepository.save(user);
     }
 
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public User updateUser(Long id, User updatedUser) {

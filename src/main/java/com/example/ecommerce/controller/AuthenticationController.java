@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.stream.Collectors;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/auth")
 public class AuthenticationController {
@@ -31,9 +34,12 @@ public class AuthenticationController {
             //auth user
             User user = authenticationService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
-            String token = jwtUtil.generateToken(user.getEmail());
+            // convert roles to a list of strings
+            List<String> roles = user.getRoles().stream().collect(Collectors.toList());
 
-            LoginResponse response = new LoginResponse(token, user.getRoles());
+            String token = jwtUtil.generateToken(user.getEmail(), roles);
+
+            LoginResponse response = new LoginResponse(token, roles);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

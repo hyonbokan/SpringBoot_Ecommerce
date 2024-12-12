@@ -21,7 +21,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid User user) {
-        User savedUser = userService.registerUser(user);
+        User savedUser = userService.registerUser(user, false);
 
         UserDTO userDTO = new UserDTO(
                 savedUser.getId(),
