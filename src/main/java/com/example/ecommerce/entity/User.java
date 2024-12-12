@@ -29,6 +29,7 @@ public class User {
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$",
             message = "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one digit, and one special character"
     )
+
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
