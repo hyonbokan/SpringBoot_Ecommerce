@@ -3,7 +3,7 @@ package com.example.ecommerce.dto;
 import java.util.Set;
 
 public class UserDTO {
-    private Long id;
+    private final Long id;
     private String name;
     private String email;
     private Set<String> roles;

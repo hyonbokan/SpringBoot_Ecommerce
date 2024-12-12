@@ -1,7 +1,6 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.AuthenticationService;
-import com.example.ecommerce.service.UserService;
 import com.example.ecommerce.util.JwtUtil;
 import com.example.ecommerce.dto.LoginResponse;
 import com.example.ecommerce.dto.LoginRequest;
