@@ -8,11 +8,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
+@Entity // Marks a class as a JPA entity, which means it is mapped to a database table
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Specifies the primary key for the entity.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensures that the database generates a unique ID automatically when a new record is inserted
     private Long id;
 
     @NotBlank(message = "Name cannot be blank")
