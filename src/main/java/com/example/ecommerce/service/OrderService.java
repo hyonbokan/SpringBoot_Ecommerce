@@ -4,11 +4,12 @@ import com.example.ecommerce.entity.*;
 import com.example.ecommerce.enums.OrderStatus;
 import com.example.ecommerce.repository.OrderRepository;
 import com.example.ecommerce.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
-
+@Service
 public class OrderService {
 
     private final OrderRepository orderRepository;
