@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "`order`") // backtircks to escape the reserved keyword
 public class Order {
 
     @Id

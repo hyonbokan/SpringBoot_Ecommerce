@@ -4,7 +4,7 @@ import com.example.ecommerce.dto.UserDTO;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.UserService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
+// import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +19,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid User user) {
-        User savedUser = userService.registerUser(user, false);
+    // @PostMapping("/register")
+    // public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid User user) {
+    //     User savedUser = userService.registerUser(user, false);
 
-        UserDTO userDTO = new UserDTO(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getRoles()
-        );
-        return ResponseEntity.ok(userDTO);
-    }
+    //     UserDTO userDTO = new UserDTO(
+    //             savedUser.getId(),
+    //             savedUser.getName(),
+    //             savedUser.getEmail(),
+    //             savedUser.getRoles()
+    //     );
+    //     return ResponseEntity.ok(userDTO);
+    // }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody @Valid User updatedUser) {

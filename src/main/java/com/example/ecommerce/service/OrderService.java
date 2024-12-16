@@ -57,4 +57,8 @@ public class OrderService {
     public List<Order> getOrdersByUser(Long userId) {
         return orderRepository.findByUserId(userId);
     }
+
+    public List<Order> getOrdersByEmail(String email) {
+        return orderRepository.findByUserEmail(email);
+    }
 }

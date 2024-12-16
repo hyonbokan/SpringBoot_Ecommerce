@@ -19,6 +19,7 @@ public class JwtUtil {
         int expTime = 86400000; // token expiry 1 day
         return Jwts.builder()
                 .setSubject(email) // the subject of the token
+                .claim("roles", roles) // add roles to the token
                 .setIssuedAt(new Date()) // token creation time
                 .setExpiration(new Date(System.currentTimeMillis() + expTime))
                 .signWith(key)

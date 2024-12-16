@@ -29,6 +29,10 @@ public class Product {
     @Min(value = 0, message = "Stock quantity must be greater than or equal to 0")
     private Integer stockQuantity;
 
+    private String imageUrl;
+
+    private String category;
+
     // Getters
     public Long getId(){
         return id;
@@ -50,6 +54,14 @@ public class Product {
         return stockQuantity;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -65,5 +77,13 @@ public class Product {
 
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

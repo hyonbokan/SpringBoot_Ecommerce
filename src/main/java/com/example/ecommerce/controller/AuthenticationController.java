@@ -1,8 +1,13 @@
 package com.example.ecommerce.controller;
 
 import com.example.ecommerce.service.AuthenticationService;
+import com.example.ecommerce.service.UserService;
 import com.example.ecommerce.util.JwtUtil;
+
+import jakarta.validation.Valid;
+
 import com.example.ecommerce.dto.LoginResponse;
+import com.example.ecommerce.dto.UserDTO;
 import com.example.ecommerce.dto.LoginRequest;
 import com.example.ecommerce.entity.User;
 import org.springframework.http.HttpStatus;
@@ -23,10 +28,12 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
-    public AuthenticationController(AuthenticationService authenticationService, JwtUtil jwtUtil) {
+    public AuthenticationController(AuthenticationService authenticationService, JwtUtil jwtUtil, UserService userService) {
         this.authenticationService = authenticationService;
         this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -45,5 +52,17 @@ public class AuthenticationController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid User user) {
+        User savedUser = userService.registerUser(user, false);
+        UserDTO userDTO = new UserDTO(
+            savedUser.getId(),
+            savedUser.getName(),
+            savedUser.getEmail(),
+            savedUser.getRoles());
+        
+        return ResponseEntity.ok(userDTO);
     }
 }
