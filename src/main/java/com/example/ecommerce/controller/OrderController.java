@@ -5,12 +5,13 @@ import com.example.ecommerce.service.OrderService;
 import com.example.ecommerce.service.UserService;
 import com.example.ecommerce.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 // import java.security.Principal;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("api/orders")
@@ -25,7 +26,7 @@ public class OrderController {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
-
+    
     @PostMapping
     public ResponseEntity<Order> createOrder (
             @RequestHeader("Authorization") String token,
@@ -41,12 +42,10 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
-    // What is principal?: 
     @GetMapping
     public ResponseEntity<List<Order>> getUserOrders(Principal principal) {        
-        System.out.println("Principal: " + principal.getName());
-        System.out.println("Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-
+        // System.out.println("Principal: " + principal.getName());
+        // System.out.println("Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         String email = principal.getName();
         List<Order> orders = orderService.getOrdersByEmail(email);
         return ResponseEntity.ok(orders);

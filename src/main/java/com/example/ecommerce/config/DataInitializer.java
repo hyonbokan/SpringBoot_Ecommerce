@@ -1,13 +1,19 @@
 package com.example.ecommerce.config;
 
+import com.example.ecommerce.entity.FakeStoreProduct;
 import com.example.ecommerce.entity.User;
+import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.repository.ProductRepository;
 import com.example.ecommerce.service.UserService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Arrays;
 
 @Component
 public class DataInitializer implements ApplicationRunner {
@@ -22,6 +28,11 @@ public class DataInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+        initializeProducts();
+        initializedAdminUser();
+    }
+
+    private void initializedAdminUser() {
         String adminEmail = "admin@example.com";
         String adminPassword = "AdminPassword123";
 
@@ -49,9 +60,31 @@ public class DataInitializer implements ApplicationRunner {
         RestTemplate restTemplate = new RestTemplate();
 
 
-
         try{
+            // fetch product from the API
+            ResponseEntity<FakeStoreProduct[]> response = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                null,
+                FakeStoreProduct[].class
+            );
 
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Product> products = Arrays.stream(response.getBody())
+                .map(apiProduct -> {
+                    Product product = new Product();
+                    product.setName(apiProduct.getTitle());
+                    product.setDescription(apiProduct.getDescription());
+                    product.setPrice(apiProduct.getPrice());
+                    product.setImageUrl(apiProduct.getImage());
+                    product.setCategory(apiProduct.getCategory());
+                    product.setStockQuantity(50); // default
+                    return product;
+                }).toList();
+                productRepository.saveAll(products);
+                System.out.println("Products initialized successfully!");
+            }
+            
         } catch (Exception e) {
             System.out.println("Error initializing products: " + e.getMessage());
         }

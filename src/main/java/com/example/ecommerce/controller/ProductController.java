@@ -23,6 +23,19 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping
+    public ResponseEntity<Page<Product>> getAllProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String sortDir
+        ) {
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            Pageable pageable = PageRequest.of(page, size, sort);
+            return ResponseEntity.ok(productService.getAllProducts(pageable));
+    }
+
+
     @GetMapping("/search")
     public PaginatedResponse<Product> searchProducts(
             @RequestParam(required = false) String keyword,
