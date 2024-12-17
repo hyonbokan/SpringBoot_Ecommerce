@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Table, TableBody, TableHead, TableRow, CircularProgress, Alert, TableCell } from '@mui/material';
+import { Box, Typography, Table, TableBody, TableHead, TableRow, CircularProgress, Alert, TableCell } from '@mui/material';
 import apiClient from '../api/apiClient';
-import { fetchOrders } from '../api/productService';
 
 
 const DashboardPage = () => {

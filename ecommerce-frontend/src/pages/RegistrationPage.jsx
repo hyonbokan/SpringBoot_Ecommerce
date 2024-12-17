@@ -26,7 +26,8 @@ const RegistrationPage = () => {
             setError('');
             setFormData({ name: '', email: '', password: '' });
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+            console.log(err.response?.data.password)
+            setError(err.response?.data?.password || 'Registration failed. Please try again.');
         }
     };
 
@@ -37,7 +38,7 @@ const RegistrationPage = () => {
                 Register
             </Typography>
             {success && <Alert severity='success'>Registration is successful! Please log in.</Alert>}
-            {error && <Alert security='error'>{error}</Alert>}
+            {error && <Alert severity='error'>{error}</Alert>}
 
             <form onSubmit={handleSubmit}>
                 <TextField

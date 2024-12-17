@@ -15,8 +15,12 @@ const Navbar = () => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    E-commerce App
+                    <Button color="inherit" href="/" sx={{ textTransform: 'none' }}>
+                        E-commerce App
+                    </Button>
                 </Typography>
+
+                <Button color="inherit" href="/">Home</Button>
                 { !isAuthenticated && (
                     <>
                     <Button color="inherit" href="/login">Login</Button>

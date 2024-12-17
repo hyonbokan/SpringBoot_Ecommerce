@@ -35,7 +35,8 @@ public class SecurityConfig {
                         .requestMatchers(
                             "/api/users/register",
                             "/api/auth/**",
-                            "/api/orders/**"
+                            "/api/orders/**",
+                            "/api/products/**"
                             ).permitAll() // Allow public access
                         .requestMatchers("/api/orders/**").hasRole("USER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -51,7 +52,6 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                // Adjust paths and methods as needed
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:3000")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
