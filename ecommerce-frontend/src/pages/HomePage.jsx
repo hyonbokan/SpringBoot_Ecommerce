@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { 
-    Grid2,
+import {
     Card,
     CardMedia,
     CardContent,
@@ -25,7 +24,7 @@ const HomePage = () => {
         const loadProducts = async () => {
             setLoading(true);
             try {
-                const data = await fetchProducts(currentPage);
+                const data = await fetchProducts(currentPage, 12);
                 setProducts(data.content);
                 setTotalPage(data.totalPages);
             } catch (error) {
@@ -54,40 +53,67 @@ const HomePage = () => {
                     All Products
                 </Typography>
                 {/* products */}
-                <Grid2 container spacing={3} justifyContent='center'>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
                     {products.map((product) => (
-                    <Grid2 item size={12} sm={6} md={4} lg={3} key={product.id}>
-                        <Card sx={{ 
-                            height: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            boxShadow: 4,
-                            borderRadius: 2,
+                        <Card 
+                            key={product.id}
+                            sx={{ 
+                                width: 'calc(25% - 16px)', // 4 cards in a row with 16px spacing
+                                minWidth: '240px', // Minimum width for small screens
+                                height: 400, // fixed height
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                boxShadow: 3,
+                                borderRadius: 2,
+                                overflow: 'hidden',
                             }}>
                             <CardMedia
                                 component='img'
                                 image={product.imageUrl}
                                 alt={product.name}
                                 sx={{ 
-                                    height: 200,
+                                    height: 180,
                                     objectFit: 'contain',
                                     padding: 1,
                                     // backgroundColor: '#f8f9fa',
                                 }}
                             />
-                            <CardContent>
+                            <CardContent
+                                sx={{
+                                    flex: 1, //take up remaining space
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {/* title */}
                                 <Typography 
-                                variant='h6'
-                                align='center'
-                                sx={{ mb: 1, fontWeight: 'bold' }}
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        width: '100%',
+                                    }}
                                 >
                                     {product.name}
                                 </Typography>
+                                
+                                {/* description */}
                                 <Typography
                                     variant='body2'
                                     color='text.secondary'
-                                    sx={{ textAlign: 'center', mb: 2, height: '50px', overflow: 'hidden' }}
+                                    sx={{
+                                        textAlign: 'left',
+                                        height: '50px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        mt: 1,
+                                    }}
                                 >
                                     {
                                         product.description.length > 100
@@ -95,10 +121,22 @@ const HomePage = () => {
                                             : product.description
                                     }
                                 </Typography>
-                                <Typography variant='h6' color='primary'>
+
+                                {/* Price */}
+                                <Typography
+                                    variant="h6"
+                                    color="primary"
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mt: 1,
+                                        height: '5px'
+                                    }}
+                                >
                                     ${product.price.toFixed(2)}
                                 </Typography>
                             </CardContent>
+                            
+                            {/* detail action button */}
                             <CardActions sx={{ mt: 'auto' }}>
                                 <Button 
                                     size='medium' 
@@ -111,9 +149,8 @@ const HomePage = () => {
                                 </Button>
                             </CardActions>
                         </Card>
-                    </Grid2>   
                     ))}
-                </Grid2>
+                </Box>
 
                 {/* Pagination */}
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4}}>
