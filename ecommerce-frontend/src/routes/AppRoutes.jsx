@@ -6,8 +6,10 @@ import DashboardPage from '../pages/DashboardPage';
 import HomePage from '../pages/HomePage';
 import Layout from '../components/layout/Layout';
 import ProtectedRoute from '../components/ProtectedRoute';
+import CartPage from '../pages/CartPage'
+import ProductDetailPage from '../pages/ProductDetailPage';
 
-const AppRoutes = () => {
+const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart }) => {
     const isAuthenticated = !!localStorage.getItem('token');
     return (
         <Router>
@@ -15,21 +17,21 @@ const AppRoutes = () => {
                 <Route
                     path='/'
                     element={
-                        <Layout>
-                            <HomePage />
+                        <Layout totalCartQuantity={totalCartQuantity}>
+                            <HomePage addToCart={addToCart} />
                         </Layout> 
                 } />
                 <Route 
                     path='/login' 
                     element={
-                        <Layout>
+                        <Layout totalCartQuantity={totalCartQuantity}>
                             <LoginPage />
                         </Layout>
                 } />
                 <Route
                     path='/register'
                     element={
-                        <Layout>
+                        <Layout totalCartQuantity={totalCartQuantity}>
                             <RegistrationPage />
                         </Layout> 
                 }/>
@@ -37,13 +39,32 @@ const AppRoutes = () => {
                     path='/dashboard'
                     element={
                         <ProtectedRoute isAuthenticated={isAuthenticated}>
-                            <Layout>
-                                <DashboardPage />
+                            <Layout totalCartQuantity={totalCartQuantity}>
+                                <DashboardPage cart={cart} removeFromCart={removeFromCart} />
                             </Layout>
                         </ProtectedRoute>
                     }
                 />
-                <Route path='*' element={ <Navigate to='/login' replace /> } />
+                <Route
+                    path='/cart'
+                    element={
+                        <Layout totalCartQuantity={totalCartQuantity}>
+                            <CartPage cart={cart} removeFromCart={removeFromCart} />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path='/product/:id'
+                    element={
+                        <Layout totalCartQuantity={totalCartQuantity}>
+                            <ProductDetailPage addToCart={addToCart} />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path='*'
+                    element={<Navigate to={isAuthenticated ? '/' : '/login'} replace />}
+                />
             </Routes>
         </Router>
     );

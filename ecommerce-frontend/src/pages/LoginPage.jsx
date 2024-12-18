@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography } from '@mui/material';
+import { Box, TextField, Button, Typography, Alert } from '@mui/material';
 import apiClient from '../api/apiClient';
 
 const LoginPage = () => {
+    const [sucess, setSuccess] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -16,11 +18,13 @@ const LoginPage = () => {
             // save token and roles in local store
             localStorage.setItem('token', token);
             localStorage.setItem('roles', JSON.stringify(roles));
+            setSuccess(true);
+            setError('');
 
-            alert('Login successful');
+            
             window.location.href = 'dashboard';
         } catch (error) {
-            alert('Invalid credentials');
+            setError(`Login failed. Error: ${error}`);
         }
     };
 
@@ -29,6 +33,8 @@ const LoginPage = () => {
             <Typography variant='h4' align='center' gutterBottom>
                 Login
             </Typography>
+            {sucess && <Alert security='success'>Login successful</Alert>}
+            {error && <Alert severity='error'>{error}</Alert>}
             <form onSubmit={handleLogin}>
                 <TextField
                     label='Email'

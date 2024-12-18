@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -27,6 +28,10 @@ public class ProductService {
     // Retrive all products
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
     // add new product

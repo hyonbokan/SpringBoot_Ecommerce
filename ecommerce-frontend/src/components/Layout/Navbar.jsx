@@ -1,8 +1,8 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Badge } from '@mui/material';
 
 
-const Navbar = () => {
+const Navbar = ({ totalCartQuantity }) => {
     const isAuthenticated = !!localStorage.getItem('token');
 
     const hadnleLogout = () => {
@@ -30,6 +30,12 @@ const Navbar = () => {
                 { isAuthenticated && (
                     <>
                         <Button color="inherit" href="/dashboard">Dashboard</Button>
+                        <Button color="inherit" href="/cart">
+                            Cart
+                            <Badge color="secondary" badgeContent={totalCartQuantity} showZero>
+                                🛒
+                            </Badge>
+                        </Button>
                         <Button color="inherit" onClick={hadnleLogout}>Logout</Button>
                     </>
                 )}

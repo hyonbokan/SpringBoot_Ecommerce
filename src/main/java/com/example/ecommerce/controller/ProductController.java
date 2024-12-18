@@ -35,6 +35,13 @@ public class ProductController {
             return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id)
+                                        .orElseThrow(() -> new RuntimeException("Product not found."));
+        return ResponseEntity.ok(product);
+    }
+
 
     @GetMapping("/search")
     public PaginatedResponse<Product> searchProducts(

@@ -6,7 +6,6 @@ export const fetchProducts = async (page = 0, size = 10) => {
         const response = await apiClient.get('/products', { 
             params: {page, size} 
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching products: ', error);

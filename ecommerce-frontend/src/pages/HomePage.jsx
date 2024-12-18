@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Card,
     CardMedia,
@@ -13,30 +14,31 @@ import {
 } from '@mui/material';
 import { fetchProducts } from '../api/productService';
 
-const HomePage = () => {
+const HomePage = ({ addToCart }) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPage] = useState(0);
 
-    useEffect(() => {
-        const loadProducts = async () => {
-            setLoading(true);
-            try {
-                const data = await fetchProducts(currentPage, 12);
-                setProducts(data.content);
-                setTotalPage(data.totalPages);
-            } catch (error) {
-                console.log('Error fetching products: ', error);
-                setError('Failed to load products. Please try again.');
-            } finally {
-                setLoading(false);
-            }
-        };
+    useEffect(
+        () => {
+            const loadProducts = async () => {
+                setLoading(true);
+                try {
+                    const data = await fetchProducts(currentPage, 12);
+                    setProducts(data.content);
+                    setTotalPage(data.totalPages);
+                } catch (error) {
+                    setError(`Failed to load products:  ${error} Please try again.`);
+                } finally {
+                    setLoading(false);
+                }
+            };
 
-        loadProducts();
-    }, [currentPage]); // reload products when currentPage changes
+            loadProducts();
+        }, [currentPage]  // reload products when currentPage changes
+    );
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value - 1);
@@ -44,7 +46,7 @@ const HomePage = () => {
 
     if (loading) return <CircularProgress sx={{ margin: 'auto', display: 'block', mt: 10 }} />;
 
-    if (error) return <Alert severity='error' sx={{ mt: 4 }}>{error}</Alert>;
+    if (error) return <Alert severity='error'>{error}</Alert>;
 
     return (
         <>
@@ -136,16 +138,43 @@ const HomePage = () => {
                                 </Typography>
                             </CardContent>
                             
-                            {/* detail action button */}
-                            <CardActions sx={{ mt: 'auto' }}>
-                                <Button 
-                                    size='medium' 
-                                    variant='contained' 
-                                    color='primary' 
-                                    fullWidth
-                                    sx={{ fontWeight: 'bold', textTransform: 'none' }}
+                            <CardActions sx={{ mt: 'auto', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
+                                {/* detail action button */}
+                                <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', width: '48%' }}>
+                                    <Button 
+                                        variant='contained' 
+                                        color='primary'
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            textTransform: 'none',
+                                            minWidth: 100, // Allow the button to expand
+                                            height: 40, // Consistent height
+                                            padding: '0 16px', // Add horizontal padding for text
+                                            flexShrink: 0,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        View Details
+                                    </Button>
+                                </Link>
+                                {/* cart button */}
+                                <Button
+                                    variant='contained'
+                                    color='primary'
+                                    onClick={() => addToCart(product)}
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        textTransform: 'none',
+                                        minWidth: 100, // Allow the button to expand
+                                        height: 40, // Consistent height
+                                        padding: '0 16px', // Add horizontal padding for text
+                                        flexShrink: 0,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                    }}
                                 >
-                                    View Details
+                                    Add to Cart
                                 </Button>
                             </CardActions>
                         </Card>
