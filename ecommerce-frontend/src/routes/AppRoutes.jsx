@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import RegistrationPage from '../pages/RegistrationPage';
 import DashboardPage from '../pages/DashboardPage';
 import HomePage from '../pages/HomePage';
-import Layout from '../components/layout/Layout';
+import Layout from '../components/Layout/Layout';
 import ProtectedRoute from '../components/ProtectedRoute';
 import CartPage from '../pages/CartPage'
 import ProductDetailPage from '../pages/ProductDetailPage';
@@ -54,7 +54,7 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart }) 
                     }
                 />
                 <Route
-                    path='/product/:id'
+                    path='/products/:id'
                     element={
                         <Layout totalCartQuantity={totalCartQuantity}>
                             <ProductDetailPage addToCart={addToCart} />
