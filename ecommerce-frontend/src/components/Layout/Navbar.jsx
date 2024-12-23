@@ -8,6 +8,7 @@ const Navbar = ({ totalCartQuantity }) => {
     const hadnleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('roles');
+        // localStorage.removeItem('cart')
         window.location.href = '/login';
     };
 

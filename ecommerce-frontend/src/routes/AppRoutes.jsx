@@ -4,12 +4,12 @@ import LoginPage from '../pages/LoginPage';
 import RegistrationPage from '../pages/RegistrationPage';
 import DashboardPage from '../pages/DashboardPage';
 import HomePage from '../pages/HomePage';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/layout/Layout';
 import ProtectedRoute from '../components/ProtectedRoute';
 import CartPage from '../pages/CartPage'
 import ProductDetailPage from '../pages/ProductDetailPage';
 
-const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart }) => {
+const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, clearCart }) => {
     const isAuthenticated = !!localStorage.getItem('token');
     return (
         <Router>
@@ -49,7 +49,7 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart }) 
                     path='/cart'
                     element={
                         <Layout totalCartQuantity={totalCartQuantity}>
-                            <CartPage cart={cart} removeFromCart={removeFromCart} />
+                            <CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />
                         </Layout>
                     }
                 />

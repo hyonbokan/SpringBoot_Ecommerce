@@ -1,16 +1,23 @@
 package com.example.ecommerce.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Transient // Not saved to the database
+    private Long productId; // Will map the incoming JSON "productId"
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonIgnoreProperties("items") // Prevent cyclical reference if needed
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,6 +29,10 @@ public class OrderItem {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
     public void setId(Long id) {

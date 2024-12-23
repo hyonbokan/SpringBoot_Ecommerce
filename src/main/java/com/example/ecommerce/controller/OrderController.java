@@ -4,13 +4,14 @@ import com.example.ecommerce.entity.*;
 import com.example.ecommerce.service.OrderService;
 import com.example.ecommerce.service.UserService;
 import com.example.ecommerce.util.JwtUtil;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+// import java.security.Principal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-// import java.security.Principal;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -27,19 +28,27 @@ public class OrderController {
         this.jwtUtil = jwtUtil;
     }
     
-    @PostMapping
-    public ResponseEntity<Order> createOrder (
+    @PostMapping("/checkout")
+    public ResponseEntity<?> createOrder (
             @RequestHeader("Authorization") String token,
-            @RequestBody List<OrderItem> items) {
+            @RequestBody List<OrderItem> items
+            ) {
+        try {
         // extract the email from the jwt token
         String email = jwtUtil.validateToken(token.substring(7)); // Remove "Bearer"
 
         // fetch the user and proceed with order creation
         User user = userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
+        
         Order order = orderService.createOrder(user, items);
         return ResponseEntity.ok(order);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred during checkout.");
+        }
     }
 
     @GetMapping

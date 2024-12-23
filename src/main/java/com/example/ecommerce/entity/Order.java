@@ -1,12 +1,15 @@
 package com.example.ecommerce.entity;
 
 import com.example.ecommerce.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "`order`") // backtircks to escape the reserved keyword
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order {
 
     @Id
@@ -25,6 +28,7 @@ public class Order {
     //orphanRemoval = true:
     //Automatically removes OrderItem records that are no longer associated with an Order.
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("order") // Prevent cyclical reference if needed
     private List<OrderItem> items;
 
     private Double totalPrice;

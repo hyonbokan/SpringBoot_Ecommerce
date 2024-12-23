@@ -29,10 +29,11 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         initializeProducts();
-        initializedAdminUser();
+        initializeAdminUser();
+        initializeUser();
     }
 
-    private void initializedAdminUser() {
+    private void initializeAdminUser() {
         String adminEmail = "admin@example.com";
         String adminPassword = "AdminPassword123";
 
@@ -46,6 +47,22 @@ public class DataInitializer implements ApplicationRunner {
             System.out.println("Default admins created: " + adminEmail + " / " + adminPassword);
         } else {
             System.out.println("Default admin already exists.");
+        }
+    }
+
+    private void initializeUser() {
+        String email = "johnSmith@gmail.com";
+        String password = "!Password123";
+
+        if (userService.getUserByEmail(email).isEmpty()) {
+            User defaultUser = new User();
+            defaultUser.setName("John Smith");
+            defaultUser.setEmail(email);
+            defaultUser.setPassword(password);
+            userService.registerUser(defaultUser, false);
+            System.out.println("Default user created: " + email + " / " + password);
+        } else {
+            System.out.println("Default user already exists.");
         }
     }
     

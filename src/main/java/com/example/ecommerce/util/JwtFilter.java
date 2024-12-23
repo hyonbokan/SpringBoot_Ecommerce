@@ -34,14 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
                     String email = jwtUtil.validateToken(token);
                     List<String> roles = jwtUtil.extractRoles(token);
 
-                    System.out.println("Extracted roles: " + roles);
+                    // System.out.println("Extracted roles: " + roles);
 
                     // Convert roles to authorities
                     List<SimpleGrantedAuthority> authorities = roles.stream()
                     .map(role -> role.startsWith("ROLE_") ? new SimpleGrantedAuthority(role) : new SimpleGrantedAuthority("ROLE_" + role)) // Ensure 'ROLE_' prefix
                     .collect(Collectors.toList());
 
-                    System.out.println("Granted Authorities: " + authorities);
+                    // System.out.println("Granted Authorities: " + authorities);
 
                     // set auth user's context
                     SecurityContextHolder.getContext().setAuthentication((

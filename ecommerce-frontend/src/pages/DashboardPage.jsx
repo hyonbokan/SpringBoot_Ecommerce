@@ -23,7 +23,7 @@ const DashboardPage = ({ cart, removeFromCart }) => {
                 });
                 setOrders(response.data);
             } catch (error) {
-                setError('Failed to fetch orders. Please try again.');
+                setError(`Failed to fetch orders: ${error} Please try again.`);
             } finally {
                 setLoading(false);
             }

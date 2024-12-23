@@ -24,16 +24,26 @@ public class OrderService {
         double totalPrice = 0.0;
 
         for (OrderItem item : items) {
-            // find the product and check stock
-            Product product = productRepository.findById(item.getProduct().getId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+            // 1. convert item.productId to Product
+            Long productId = item.getProductId();
+            if (productId == null) {
+                throw new RuntimeException("Missing product Id in OrderItem");
+            }
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Product not found" + productId));
+            
+            // 2. Set Product in the item
+            item.setProduct(product);
 
+            // 3. Check stock
             if (product.getStockQuantity() < item.getQuantity()) {
                 throw new RuntimeException("Insufficient stock for product: " + product.getName());
             }
 
-            // calc item price and reduce stock
-            item.setPrice(product.getPrice() * item.getQuantity());;
+            // 4. calc item price and reduce stock
+            double itemPrice = product.getPrice() * item.getQuantity();
+            item.setPrice(itemPrice);
+            
             product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
             productRepository.save(product);
 

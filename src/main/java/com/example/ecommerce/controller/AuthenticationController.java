@@ -62,7 +62,7 @@ public class AuthenticationController {
             savedUser.getName(),
             savedUser.getEmail(),
             savedUser.getRoles());
-        
+        System.out.println("New user:" + savedUser.getEmail() + "/" + savedUser.getPassword());
         return ResponseEntity.ok(userDTO);
     }
 }

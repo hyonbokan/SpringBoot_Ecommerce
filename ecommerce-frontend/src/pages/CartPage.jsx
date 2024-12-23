@@ -1,7 +1,38 @@
-import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Button } from '@mui/material';
+import { React, useState } from 'react';
+import { Box, Typography, List, ListItem, ListItemText, Button, Alert } from '@mui/material';
+import apiClient from '../api/apiClient';
 
-const CartPage = ({ cart, removeFromCart }) => {
+const CartPage = ({ cart, removeFromCart, clearCart }) => {
+
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    
+    const handleCheckout = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("You must log in to checkout.");
+            return;
+        }
+
+        // transform cart to match the expected backend payload
+        const orderItems = cart.map((item) => ({
+            productId: item.id,
+            quantity: item.quantity,
+        }));
+
+        try {
+            const response = await apiClient.post('/orders/checkout', orderItems, {
+                headers: { Authorization: `Bearer ${token}`},
+            });
+            setSuccess('Order placed successfully!');
+            clearCart();
+        } catch (err) {
+            setError(`Failed to process checkout: ${err}.\nPlease try again.`);
+        }
+        
+    }
+
     if (cart.length === 0) {
         return (
             <Box sx={{ padding: 4 }}>
@@ -17,6 +48,18 @@ const CartPage = ({ cart, removeFromCart }) => {
             <Typography variant="h4" align="center" gutterBottom>
                 Shopping Cart
             </Typography>
+
+            {success && (
+                <Alert severity='success' sx={{ mb: 2 }}>
+                    {success}
+                </Alert>
+            )}
+            {error && (
+                <Alert severity='error' sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
+            )}
+
             <List>
                 {cart.map((item) => (
                     <ListItem key={item.id} sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, }}>
@@ -45,10 +88,23 @@ const CartPage = ({ cart, removeFromCart }) => {
                     </ListItem>
                 ))}
             </List>
-            <Typography variant="h6" align="right" sx={{ mt: 2 }}>
-                Total: $
-                {cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
-            </Typography>
+
+            <Box sx={{ textAlign: 'right', mt: 2}}>
+                <Typography variant="h6" align="right" sx={{ mt: 2 }}>
+                    Total: $
+                    {cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}
+                </Typography>
+                {/* Check out button */}
+                <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={handleCheckout}
+                    sx={{ mt: 2 }}
+                    disabled={cart.length === 0}
+                >
+                    Check out
+                </Button>
+            </Box>
         </Box>
     );
 };

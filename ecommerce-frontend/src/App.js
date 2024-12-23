@@ -21,7 +21,7 @@ const App = () => {
     } else {
       localStorage.removeItem('cart'); // Clear cart from localStorage if empty
     }
-    console.log(`saving cart from the local store: ${localStorage.getItem('cart')}`);
+    // console.log(`saving cart from the local store: ${localStorage.getItem('cart')}`);
   }, [cart]);
 
   // Add product to the cart
@@ -52,6 +52,11 @@ const App = () => {
     });
   };
 
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem('cart');
+  }
+
   // Update total cart quantity whenever the cart changes
   useEffect(() => {
     const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
@@ -64,6 +69,7 @@ const App = () => {
       totalCartQuantity={totalCartQuantity}
       addToCart={addToCart}
       removeFromCart={removeFromCart}
+      clearCart={clearCart}
     />
   );
 };
