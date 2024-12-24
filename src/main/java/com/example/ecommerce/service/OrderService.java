@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +79,28 @@ public class OrderService {
 
     public List<Order> getOrdersByEmail(String email) {
         return orderRepository.findByUserEmail(email);
+    }
+
+    private boolean verifyTransaction(Map<String, Object> transactionData) {
+        // sim transaction
+        if (transactionData.containsKey("transactionId") && transactionData.containsKey("status")) {
+            return "SUCCESS".equalsIgnoreCase(transactionData.get("status").toString());
+        }
+        return false;
+    }
+
+    public Order completeOrder(Long orderId, User user, Map<String, Object> transactionData) {        
+        if(!verifyTransaction(transactionData)) {
+            throw new RuntimeException("Transaction failed. Order cannot be completed.");
+        }
+
+        // fetch order
+        Order order = orderRepository.findByIdAndUser(orderId, user)
+            .orElseThrow(() -> new RuntimeException("Order not found."));
+        
+        // mark as complete
+        order.setStatus(OrderStatus.COMPLETED);
+        return orderRepository.save(order);
     }
 
     public static OrderDTO tOrderDTO(Order order) {

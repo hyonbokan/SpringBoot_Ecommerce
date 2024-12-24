@@ -6,7 +6,6 @@ import apiClient from '../api/apiClient';
 const CartPage = ({ cart, removeFromCart, clearCart }) => {
 
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
 
     
@@ -24,12 +23,11 @@ const CartPage = ({ cart, removeFromCart, clearCart }) => {
         }));
 
         try {
-            const response = await apiClient.post('/orders/checkout', orderItems, {
+            const createOrderResponse = await apiClient.post('/orders/checkout', orderItems, {
                 headers: { Authorization: `Bearer ${token}`},
             });
-            setSuccess('Order placed successfully!');
             clearCart();
-            navigate(`/order-confirmation/${response.data.id}`);
+            navigate(`/order-confirmation/${createOrderResponse.data.id}`);
         } catch (err) {
             setError(`Failed to process checkout: ${err}.\nPlease try again.`);
         }
@@ -51,12 +49,6 @@ const CartPage = ({ cart, removeFromCart, clearCart }) => {
             <Typography variant="h4" align="center" gutterBottom>
                 Shopping Cart
             </Typography>
-
-            {success && (
-                <Alert severity='success' sx={{ mb: 2 }}>
-                    {success}
-                </Alert>
-            )}
             {error && (
                 <Alert severity='error' sx={{ mb: 2 }}>
                     {error}

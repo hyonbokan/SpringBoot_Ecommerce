@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -64,6 +65,33 @@ public class OrderController {
             .map(OrderService::tOrderDTO)
             .collect(Collectors.toList());
         return ResponseEntity.ok(orderDTOs);
+    }
+
+    @PostMapping("/{orderId}/complete")
+    public ResponseEntity<?> completeOrder(
+        @PathVariable Long orderId,
+        @RequestHeader("Authorization") String token,
+        @RequestBody Map<String, Object> transactionData
+    ) {
+        try {
+            // email from jwt token
+            String email = jwtUtil.validateToken(token.substring(7));
+
+            // fetch user
+            User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found."));
+            
+            // complete order
+            Order order = orderService.completeOrder(orderId, user, transactionData);
+
+            // convert to DTO
+            OrderDTO orderDTO = OrderService.tOrderDTO(order);
+            return ResponseEntity.ok(orderDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occured");
+        }
     }
 
     @GetMapping("/{id}")
