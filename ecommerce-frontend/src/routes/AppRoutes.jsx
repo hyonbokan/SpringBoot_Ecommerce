@@ -10,7 +10,7 @@ import CartPage from '../pages/CartPage'
 import ProductDetailPage from '../pages/ProductDetailPage';
 import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 
-const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, clearCart }) => {
+const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, clearCart, handleLogout }) => {
     const isAuthenticated = !!localStorage.getItem('token');
     return (
         <Router>
@@ -18,29 +18,29 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, cl
                 <Route
                     path='/'
                     element={
-                        <Layout totalCartQuantity={totalCartQuantity}>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <HomePage addToCart={addToCart} />
-                        </Layout> 
+                        </Layout>
                 } />
                 <Route 
                     path='/login' 
                     element={
-                        <Layout totalCartQuantity={totalCartQuantity}>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <LoginPage />
                         </Layout>
                 } />
                 <Route
                     path='/register'
                     element={
-                        <Layout totalCartQuantity={totalCartQuantity}>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <RegistrationPage />
-                        </Layout> 
+                        </Layout>
                 }/>
                 <Route
                     path='/dashboard'
                     element={
                         <ProtectedRoute isAuthenticated={isAuthenticated}>
-                            <Layout totalCartQuantity={totalCartQuantity}>
+                            <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                                 <DashboardPage cart={cart} removeFromCart={removeFromCart} />
                             </Layout>
                         </ProtectedRoute>
@@ -49,7 +49,7 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, cl
                 <Route
                     path='/cart'
                     element={
-                        <Layout totalCartQuantity={totalCartQuantity}>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />
                         </Layout>
                     }
@@ -57,7 +57,7 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, cl
                 <Route
                     path='/products/:id'
                     element={
-                        <Layout totalCartQuantity={totalCartQuantity}>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <ProductDetailPage addToCart={addToCart} />
                         </Layout>
                     }
@@ -65,7 +65,7 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, cl
                 <Route
                     path="/order-confirmation/:id"
                     element={
-                        <Layout>
+                        <Layout totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}>
                             <OrderConfirmationPage />
                         </Layout>
                     }

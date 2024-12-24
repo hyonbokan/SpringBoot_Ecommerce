@@ -3,10 +3,10 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { Box } from '@mui/material';
 
-const Layout = ({ children, totalCartQuantity }) => {
+const Layout = ({ children, totalCartQuantity, handleLogout }) => {
     return (
         <>
-            <Navbar totalCartQuantity={totalCartQuantity}/>
+            <Navbar totalCartQuantity={totalCartQuantity} handleLogout={handleLogout}/>
             <Box
                 sx={{
                     minHeight: 'calc(100vh - 120px)',

@@ -51,9 +51,6 @@ const HomePage = ({ addToCart }) => {
     return (
         <>
             <Box sx={{ width: '95%', margin: 'auto', mt: 4}}>
-                <Typography variant='h4' gutterBottom align="center" sx={{ mb: 4 }}>
-                    All Products
-                </Typography>
                 {/* products */}
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
                     {products.map((product) => (

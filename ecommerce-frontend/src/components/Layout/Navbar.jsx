@@ -2,15 +2,8 @@ import React from "react";
 import { AppBar, Toolbar, Typography, Button, Badge } from '@mui/material';
 
 
-const Navbar = ({ totalCartQuantity }) => {
+const Navbar = ({ totalCartQuantity, handleLogout}) => {
     const isAuthenticated = !!localStorage.getItem('token');
-
-    const hadnleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('roles');
-        // localStorage.removeItem('cart')
-        window.location.href = '/login';
-    };
 
     return (
         <AppBar position="static">
@@ -37,7 +30,7 @@ const Navbar = ({ totalCartQuantity }) => {
                                 🛒
                             </Badge>
                         </Button>
-                        <Button color="inherit" onClick={hadnleLogout}>Logout</Button>
+                        <Button color="inherit" onClick={handleLogout}>Logout</Button>
                     </>
                 )}
             </Toolbar>

@@ -57,6 +57,14 @@ const App = () => {
     localStorage.removeItem('cart');
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('cart');
+    setCart([]);
+    setTotalCartQuantity(0);
+    window.location.href = '/login';
+  };
+
   // Update total cart quantity whenever the cart changes
   useEffect(() => {
     const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
@@ -70,6 +78,7 @@ const App = () => {
       addToCart={addToCart}
       removeFromCart={removeFromCart}
       clearCart={clearCart}
+      handleLogout={handleLogout}
     />
   );
 };
