@@ -1,5 +1,6 @@
 package com.example.ecommerce.controller;
 
+import com.example.ecommerce.dto.OrderDTO;
 import com.example.ecommerce.entity.*;
 import com.example.ecommerce.service.OrderService;
 import com.example.ecommerce.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 
 @RestController
@@ -35,14 +38,16 @@ public class OrderController {
             ) {
         try {
         // extract the email from the jwt token
-        String email = jwtUtil.validateToken(token.substring(7)); // Remove "Bearer"
+        String email = jwtUtil.validateToken(token.substring(7));
 
         // fetch the user and proceed with order creation
         User user = userService.getUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
         Order order = orderService.createOrder(user, items);
-        return ResponseEntity.ok(order);
+
+        OrderDTO orderDTO = OrderService.tOrderDTO(order);
+        return ResponseEntity.ok(orderDTO);
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -52,11 +57,32 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getUserOrders(Principal principal) {        
-        // System.out.println("Principal: " + principal.getName());
-        // System.out.println("Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+    public ResponseEntity<List<OrderDTO>> getUserOrders(Principal principal) {        
         String email = principal.getName();
         List<Order> orders = orderService.getOrdersByEmail(email);
-        return ResponseEntity.ok(orders);
+        List<OrderDTO> orderDTOs = orders.stream()
+            .map(OrderService::tOrderDTO)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(orderDTOs);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderById(
+        @PathVariable Long id, 
+        @RequestHeader("Authorization") String token
+        ) {
+            try {
+                String email = jwtUtil.validateToken(token.substring(7));
+                User user = userService.getUserByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+
+                Order order = orderService.getOrderByIdAndUser(id, user);
+                return ResponseEntity.ok(OrderService.tOrderDTO(order));
+            } catch (RuntimeException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred.");
+            }
+    }
+    
 }

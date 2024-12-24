@@ -8,6 +8,7 @@ import Layout from '../components/layout/Layout';
 import ProtectedRoute from '../components/ProtectedRoute';
 import CartPage from '../pages/CartPage'
 import ProductDetailPage from '../pages/ProductDetailPage';
+import OrderConfirmationPage from '../pages/OrderConfirmationPage';
 
 const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, clearCart }) => {
     const isAuthenticated = !!localStorage.getItem('token');
@@ -58,6 +59,14 @@ const AppRoutes = ({ cart = [], totalCartQuantity, addToCart, removeFromCart, cl
                     element={
                         <Layout totalCartQuantity={totalCartQuantity}>
                             <ProductDetailPage addToCart={addToCart} />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/order-confirmation/:id"
+                    element={
+                        <Layout>
+                            <OrderConfirmationPage />
                         </Layout>
                     }
                 />

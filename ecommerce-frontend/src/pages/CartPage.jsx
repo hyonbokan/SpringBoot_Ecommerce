@@ -1,11 +1,13 @@
 import { React, useState } from 'react';
 import { Box, Typography, List, ListItem, ListItemText, Button, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 
 const CartPage = ({ cart, removeFromCart, clearCart }) => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
     
     const handleCheckout = async () => {
@@ -27,6 +29,7 @@ const CartPage = ({ cart, removeFromCart, clearCart }) => {
             });
             setSuccess('Order placed successfully!');
             clearCart();
+            navigate(`/order-confirmation/${response.data.id}`);
         } catch (err) {
             setError(`Failed to process checkout: ${err}.\nPlease try again.`);
         }

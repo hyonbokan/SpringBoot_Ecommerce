@@ -1,11 +1,8 @@
 package com.example.ecommerce.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderItem {
 
     @Id
@@ -17,7 +14,6 @@ public class OrderItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    @JsonIgnoreProperties("items") // Prevent cyclical reference if needed
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,5 +1,7 @@
 package com.example.ecommerce.service;
 
+import com.example.ecommerce.dto.OrderDTO;
+import com.example.ecommerce.dto.OrderItemDTO;
 import com.example.ecommerce.entity.*;
 import com.example.ecommerce.enums.OrderStatus;
 import com.example.ecommerce.repository.OrderRepository;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -64,11 +67,40 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public Order getOrderByIdAndUser(Long orderId, User user) {
+        return orderRepository.findByIdAndUser(orderId, user)
+                .orElseThrow(() -> new RuntimeException("Order not found or access denied."));
+    }    
+
     public List<Order> getOrdersByUser(Long userId) {
         return orderRepository.findByUserId(userId);
     }
 
     public List<Order> getOrdersByEmail(String email) {
         return orderRepository.findByUserEmail(email);
+    }
+
+    public static OrderDTO tOrderDTO(Order order) {
+        List<OrderItemDTO> itemDTOs = order.getItems().stream()
+                .map(OrderService::tOrderItemDTO)
+                .collect(Collectors.toList());
+
+        return new OrderDTO(
+            order.getId(),
+            order.getTotalPrice(),
+            order.getStatus().name(), // convert enum to string
+            order.getCreatedDate(),
+            itemDTOs
+        );
+    }
+
+    public static OrderItemDTO tOrderItemDTO(OrderItem item) {
+        return new OrderItemDTO(
+            item.getId(),
+            item.getProduct().getId(),
+            item.getProduct().getName(),
+            item.getQuantity(),
+            item.getPrice()
+        );
     }
 }

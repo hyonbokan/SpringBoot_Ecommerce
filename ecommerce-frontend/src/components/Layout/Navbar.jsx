@@ -16,7 +16,7 @@ const Navbar = ({ totalCartQuantity }) => {
         <AppBar position="static">
             <Toolbar>
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                    <Button color="inherit" href="/" sx={{ textTransform: 'none' }}>
+                    <Button color="inherit" href="/" sx={{ textTransform: 'none', fontSize: '1em' }}>
                         E-commerce App
                     </Button>
                 </Typography>
